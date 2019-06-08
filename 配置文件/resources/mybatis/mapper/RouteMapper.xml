@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace(命名空间)：映射文件的唯一标识 -->
+<mapper namespace="zhuang.sun.ssm.mapper.RouteMapper">
+
+    <!--查询最新线路-->
+    <select id="getNewestRouteList" resultType="zhuang.sun.ssm.domain.Route">
+        SELECT * FROM tab_route WHERE rflag='1' ORDER BY rdate DESC LIMIT 0,4
+    </select>
+
+    <!--查新人气路线-->
+    <select id="getPopularityRouteList" resultType="zhuang.sun.ssm.domain.Route">
+        SELECT * FROM tab_route WHERE rflag='1' ORDER BY count DESC LIMIT 0,4
+    </select>
+
+    <!--查询主题路线-->
+    <select id="getThemeRouteList" resultType="zhuang.sun.ssm.domain.Route">
+        SELECT * FROM tab_route WHERE rflag='1' and isThemeTour='1' ORDER BY rdate DESC LIMIT 0,4
+    </select>
+
+
+    <select id="findRouteListByPage" resultType="zhuang.sun.ssm.domain.Route">
+        SELECT * FROM tab_route  WHERE  rflag='1' and cid=#{cid}
+        <if test="rname!=null and rname.trim()!=''">
+            and rname like '%' #{rname} '%'
+        </if>
+                 <!--limit #{start},#{pageSize} -->
+    </select>
+
+
+   <!-- <select id="getCountByCid" resultType="java.lang.Integer">
+        SELECT COUNt(*) FROM tab_route  WHERE  rflag='1' and cid=#{cid}
+        <if test="rname!=null and rname.trim()!=''">
+            and rname like '%' #{rname} '%'
+        </if>
+    </select>-->
+
+    
+    
+    <resultMap id="detailMap" type="zhuang.sun.ssm.domain.Route" autoMapping="true">
+        <id column="rid" property="rid"/>
+        <!--用户与列表-->
+        <association property="category" javaType="zhuang.sun.ssm.domain.Category" autoMapping="true">
+            <id column="cid" property="cid"/>
+        </association>
+
+        <!--用户与商家-->
+        <association property="seller" javaType="zhuang.sun.ssm.domain.Seller" autoMapping="true">
+            <id column="sid" property="sid"/>
+        </association>
+
+        <collection property="routeImgList" javaType="list" ofType="zhuang.sun.ssm.domain.RouteImg" autoMapping="true">
+            <id column="rgid" property="rgid"/>
+        </collection>
+    </resultMap>
+
+    <select id="findRouteByRid" resultMap="detailMap">
+        SELECT
+            *
+        FROM
+            tab_route r,
+            tab_category c,
+            tab_seller s ,
+            tab_route_img i
+        WHERE
+            r.cid = c.cid
+            AND r.sid = s.sid
+            AND r.rid = i.rid
+            AND r.rflag = '1'
+            AND r.rid =#{rid}
+    </select>
+
+
+</mapper>

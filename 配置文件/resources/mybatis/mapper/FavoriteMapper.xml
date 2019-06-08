@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace(命名空间)：映射文件的唯一标识 -->
+<mapper namespace="zhuang.sun.ssm.mapper.FavoriteMapper">
+    <insert id="addFavorite">
+        insert into tab_favorite values(#{rid},NOW(),#{uid})
+    </insert>
+    <update id="updateRouteFavoriteNum">
+        update tab_route set count=count+1 where rid=#{rid}
+    </update>
+
+
+    <select id="findFavoriteByRidAndUserId" resultType="zhuang.sun.ssm.domain.Favorite">
+        select * from tab_favorite where rid=#{rid} and uid=#{uid}
+    </select>
+
+   <!-- <select id="getCountByUid" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM tab_favorite WHERE uid=#{uid}
+    </select>-->
+
+    <resultMap id="favoriteMap" type="zhuang.sun.ssm.domain.Favorite" autoMapping="true">
+        <id column="rid" property="route.rid"/>
+        <id column="uid" property="user.uid"/>
+
+        <association property="route" javaType="zhuang.sun.ssm.domain.Route" autoMapping="true">
+            <id column="rid" property="rid"/>
+        </association>
+    </resultMap>
+    <select id="findFavoriteListByPage" resultMap="favoriteMap">
+        SELECT * FROM tab_favorite f,tab_route r WHERE f.rid=r.rid AND f.uid=#{uid} ORDER BY f.date DESC
+    </select>
+</mapper>

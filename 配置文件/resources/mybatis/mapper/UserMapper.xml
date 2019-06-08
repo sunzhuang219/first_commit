@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace(命名空间)：映射文件的唯一标识 -->
+<mapper namespace="zhuang.sun.ssm.mapper.UserMapper">
+
+    <!--新增用户-->
+    <insert id="addUser">
+        INSERT INTO tab_user VALUES (NULL ,#{username},#{password},#{name},#{birthday},#{sex},#{telephone},#{email},#{status},#{code})
+    </insert>
+
+    <update id="active">
+        UPDATE tab_user SET status = 1 WHERE code = #{code} AND status = 0
+    </update>
+
+    <!--根据用户名查询用户-->
+    <select id="getUserByUserName" resultType="zhuang.sun.ssm.domain.User">
+        SELECT * FROM tab_user WHERE  username = #{username}
+    </select>
+</mapper>

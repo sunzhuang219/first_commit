@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       					   http://www.springframework.org/schema/beans/spring-beans.xsd
+						   http://www.springframework.org/schema/context
+						   http://www.springframework.org/schema/context/spring-context.xsd
+						   http://www.springframework.org/schema/aop
+						   http://www.springframework.org/schema/aop/spring-aop.xsd
+						   http://www.springframework.org/schema/tx
+						   http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+
+    <!-- 配置注解扫描
+            context:component-scan:专门扫描含有@Component注解的类，自动将其作为bean
+            base-package：要扫描包的路径,包含子包,cn.itcast.spring表示子包下的所有类定义注解都有效
+            注解扫描配置的时候，会自动开启注解功能
+    -->
+    <!--&lt;!&ndash;注解扫描 检测的范围更广，包括component service 等&ndash;&gt;-->
+    <context:component-scan base-package="zhuang.sun.ssm"/>
+
+
+    <!--引入外部文件:jdbc、redis-->
+    <context:property-placeholder location="classpath:jdbc.properties,classpath:jedis.properties"/>
+
+    <!--c3p0连接池-->
+
+    <!--<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">-->
+        <!--<property name="driverClass" value="${jdbc.driver}"/>-->
+        <!--<property name="jdbcUrl" value="${jdbc.url}"/>-->
+        <!--<property name="user" value="${jdbc.username}"/>-->
+        <!--<property name="password" value="${jdbc.password}"/>-->
+    <!--</bean>-->
+
+
+    <!--Druid连接池-->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+
+    <!--配置事务注解驱动-->
+    <!-- 默认的平台事务管理器的名字叫：transactionManager，此时transaction-manager="transactionManager"可以不写 -->
+    <tx:annotation-driven/>
+
+</beans>
